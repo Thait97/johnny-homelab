@@ -1,8 +1,12 @@
-# Network Watchdog Automation
+# Network Watchdog Design — In Progress
+
+**Status:** In development; not yet presented as a fully deployed production service.
+
+**Skills being developed:** Linux networking | systemd | Bash | journalctl | Layered troubleshooting
 
 ## Project Overview
 
-I designed a lightweight systemd-based network watchdog to make routine network health checks repeatable.
+I am designing a lightweight systemd-based network watchdog to make routine network health checks repeatable.
 
 The goal is to test the network path in layers and record the results in system logs so intermittent failures are easier to investigate.
 
@@ -25,9 +29,7 @@ Tailscale
 
 This makes it easier to determine where a network failure begins instead of treating every connectivity problem as the same issue.
 
-## systemd Design
-
-The automation uses the same separation of responsibilities I use for other Linux automation:
+## Planned systemd Design
 
 ```text
 systemd timer
@@ -42,13 +44,9 @@ network-check script
 journal logs
 ```
 
-The timer controls when the check runs.
+The timer would control when the check runs. The service would define what is executed, and the script would perform the health checks.
 
-The service defines what is executed.
-
-The script performs the actual health checks.
-
-## Frequency
+## Intended Frequency
 
 The design uses a short recurring interval, such as every five minutes, so transient failures can be captured without requiring constant manual checking.
 
@@ -62,43 +60,13 @@ Example inspection workflow:
 journalctl -t homelab-watch
 ```
 
-Using the journal means the watchdog fits into the normal Linux administration workflow instead of creating an isolated logging system.
-
-## Why Layered Checks Matter
-
-A failed internet test does not automatically mean the network interface is down.
-
-For example:
-
-```text
-Interface works
-Router responds
-Internet fails
-Tailscale unavailable
-```
-
-suggests a different problem than:
-
-```text
-Interface fails
-Router unreachable
-Internet unreachable
-Tailscale unreachable
-```
-
-The sequence helps narrow the failure domain.
-
 ## Read-Only Design
 
-The watchdog is primarily intended to observe and report.
+The watchdog is intended primarily to observe and report. It should not automatically restart networking, reboot the server, or change configuration simply because one probe fails.
 
-It should not automatically restart networking, reboot the server, or make configuration changes simply because one probe fails.
-
-This keeps monitoring separate from remediation and reduces the risk of an automated recovery action making a temporary problem worse.
+This keeps monitoring separate from remediation and reduces the chance that an automated response makes a temporary problem worse.
 
 ## Potential Future Enhancements
-
-Possible additions include:
 
 - repeated-failure thresholds
 - Uptime Kuma integration
@@ -108,19 +76,18 @@ Possible additions include:
 - packet-loss tracking
 - Tailscale peer checks
 
-These should be added only when the basic watchdog is stable and useful.
+These should be added only after the basic watchdog is implemented and tested.
 
-## What I Learned
+## What I Am Learning
 
-This project reinforces:
+This project is reinforcing:
 
 - systemd services and timers
 - layered network troubleshooting
 - Linux logging with `journalctl`
-- the difference between monitoring and remediation
-- why automation should fail safely
-- how recurring checks can create useful troubleshooting history
+- monitoring vs remediation
+- safe automation design
 
 ## Status
 
-This project is part of the homelab automation roadmap and is being developed incrementally rather than deployed as an aggressive auto-repair system.
+This project remains **in progress**. It is part of the homelab automation roadmap and should not be read as a fully deployed or production-tested service yet.

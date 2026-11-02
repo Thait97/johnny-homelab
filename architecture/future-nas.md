@@ -8,99 +8,126 @@ The goal is to create a storage platform that can serve photos, documents, media
 
 This page documents the current design direction. It is a planned architecture, not a completed deployment.
 
-## Design Direction
+## Hardware Status — November 2026
 
-The selected approach is:
+I purchased a **Lenovo ThinkCentre M720q Tiny** with:
+
+- Intel Core i5-8400T
+- 8 GB DDR4 RAM
+- 256 GB SSD
+
+The system is intended to become the dedicated NAS controller, but it is **not yet deployed**.
+
+Current status:
 
 ```text
-Mini/Tiny PC
-    |
-    | PCIe
-    v
+Hardware acquired
+→ pending physical inspection
+→ pending architecture validation
+→ not yet deployed
+```
+
+Before purchasing the remaining NAS hardware, I will inspect the machine to verify:
+
+- whether the included 256 GB SSD is M.2 NVMe or 2.5-inch SATA
+- the actual RAM configuration
+- available M.2 and PCIe expansion paths
+- whether the 256 GB SSD can remain the TrueNAS boot drive
+- BIOS condition and general hardware health
+- whether the M720q has usable PCIe expansion/riser capability
+
+The final storage-controller design will be selected only after the physical system is validated.
+
+## Architecture Validation Still Required
+
+Two controller paths are currently being considered.
+
+### Option A — M.2 SATA Controller
+
+```text
+Lenovo M720q
+      |
+      v
+ASM1166 M.2 PCIe → 6× SATA
+      |
+      v
+6 external 3.5-inch SATA HDDs
+      |
+      v
+Dedicated external power + cooling
+      |
+      v
+TrueNAS / ZFS storage
+```
+
+### Option B — PCIe HBA
+
+```text
+Lenovo M720q
+      |
+      v
+M720q PCIe expansion
+      |
+      v
 HBA in IT mode
-    |
-    | External Mini-SAS HD
-    v
-8-bay drive shelf
-    |
-    v
-ZFS storage pool
-    |
-    v
-2.5 GbE network
+      |
+      v
+External drive shelf
+      |
+      v
+ZFS storage
 ```
 
-## NAS Controller Requirements
+Neither path is final yet.
 
-The NAS controller should provide:
+The HBA option may become preferable if the physical machine supports it cleanly.
 
-- real PCIe expansion
-- PCIe 3.0 x8-class connectivity for the HBA
-- 16 GB RAM minimum
-- 32 GB RAM preferred
-- NVMe boot storage
-- 2.5 GbE networking
-- active cooling for the HBA
-- preferably two M.2 slots
+## Components Not Yet Purchased
 
-A business-class Mini/Tiny system is preferred where it can provide the required PCIe expansion.
+The following NAS components are still pending architecture validation:
 
-## HBA and Drive Connectivity
+- ASM1166 controller or HBA
+- RAM upgrade
+- NAS HDDs
+- SATA or SAS cabling
+- drive-power hardware
+- final drive shelf/enclosure hardware
+- final cooling hardware
 
-The storage design uses a Host Bus Adapter rather than a traditional hardware RAID controller.
+This prevents the design from being locked in before the M720q is physically inspected.
 
-Target controller class:
+## Why Validate Before Buying More Hardware?
+
+The project is intentionally following this workflow:
 
 ```text
-LSI / Broadcom 9300-8e
+Architecture design
+→ hardware selection
+→ hardware acquisition
+→ physical inspection
+→ architecture validation
+→ component selection
+→ deployment
+→ testing
+→ documentation
 ```
 
-The HBA should operate in:
+Buying the controller, RAM, drive hardware, and disks before checking the actual machine could create compatibility problems or force the design around assumptions that turn out to be wrong.
 
-```text
-IT mode
-```
-
-IT mode exposes individual disks directly to the operating system instead of hiding them behind a hardware RAID virtual disk.
-
-That is important for a storage stack such as ZFS, which is designed to manage the disks directly.
-
-Conceptually:
-
-```text
-NAS controller
-     |
-     v
-PCIe HBA (IT mode)
-     |
-     v
-External Mini-SAS HD
-     |
-     v
-8 individual SATA drives
-     |
-     v
-ZFS
-```
-
-## Why Not USB Storage?
-
-I am intentionally avoiding USB as the primary connection method for the long-term multi-drive NAS.
-
-The preferred design uses PCIe and an HBA because it provides a more direct and predictable storage path for multiple disks.
-
-I am also avoiding an eight-drive design based on loose USB adapters or many M.2-to-SATA adapters unless an HBA-based design becomes impossible.
+The goal is to validate the available expansion paths first, then choose the cleanest storage architecture.
 
 ## Storage Software
 
-The likely storage platform is:
+The likely storage platform remains:
 
 ```text
 TrueNAS SCALE
 ZFS
 ```
 
-ZFS is attractive for this project because the NAS is intended to become the authoritative location for persistent data.
+This is still a planned deployment.
+
+ZFS is attractive for the project because the NAS is intended to become the authoritative location for persistent data.
 
 Concepts I am learning as part of this design include:
 
@@ -133,7 +160,7 @@ I selected the centralized NAS direction because the same storage platform can s
 
 ## Planned Data Roles
 
-The NAS is intended to hold persistent data such as:
+The future NAS is intended to hold persistent data such as:
 
 - Immich photos
 - documents
@@ -147,20 +174,19 @@ Application-specific databases, caches, metadata, and transcode workloads can re
 
 ## Immich and Jellyfin Architecture
 
-The architecture is evolving toward a separate compute node for Immich and Jellyfin.
+Immich and Jellyfin are still planned to run on a separate combined compute node and access the NAS over the network.
 
 Target compute characteristics include:
 
 - Intel 12th-generation or newer Core i5
-- Intel integrated graphics
-- Intel Quick Sync support
+- Intel integrated graphics / Quick Sync
 - 32 GB RAM
 - 1 TB NVMe
 - 2.5 GbE
 - Linux
 - Docker
 
-Persistent media remains on the NAS.
+Persistent media remains on the future NAS.
 
 Local NVMe can hold:
 
@@ -178,8 +204,8 @@ Conceptually:
                     /              \
                    /                \
                   v                  v
-               NAS              Compute Node
-                |                Immich/Jellyfin
+        Future NAS Controller    Compute Node
+             M720q              Immich/Jellyfin
                 |                     |
        Persistent storage        Local NVMe
                 |                     |
@@ -224,7 +250,7 @@ Storage-related design considerations include:
 - UPS near the bottom
 - networking near the top
 - front-to-rear airflow
-- active HBA cooling
+- active cooling for storage controllers where required
 - clean cable routing
 - short Ethernet runs
 - separation of storage and compute roles
@@ -251,28 +277,13 @@ It does not automatically protect against:
 
 The final design still needs a separate backup strategy for important data.
 
-## Why This Architecture Was Selected
-
-The centralized NAS design gives me a clearer separation of responsibilities:
-
-```text
-NAS
-= persistent storage
-
-Immich / Jellyfin node
-= application compute
-
-Network infrastructure
-= DNS, remote access, monitoring, routing support
-```
-
-This makes individual systems easier to replace or upgrade without moving the authoritative data with every compute change.
-
 ## What I Am Learning
 
-This design project is helping me learn:
+This project is helping me learn:
 
+- hardware validation before deployment
 - NAS vs DAS architecture
+- M.2 PCIe-to-SATA controllers
 - HBA vs RAID controllers
 - IT mode
 - SAS/SATA connectivity
@@ -287,6 +298,17 @@ This design project is helping me learn:
 
 ## Status
 
-This architecture is still in the planning and purchasing stage.
+The NAS has moved beyond planning-only because the controller computer has now been purchased, but the system is still not part of the production homelab.
 
-I will update this document as hardware is selected, installed, tested, and moved from planned design into the production homelab.
+Current status:
+
+```text
+Lenovo M720q purchased
+→ awaiting inspection
+→ controller architecture not finalized
+→ remaining components not purchased
+→ TrueNAS not deployed
+→ storage pool not deployed
+```
+
+After the M720q is physically inspected, this page will be updated with the verified SSD type, RAM configuration, free expansion interfaces, BIOS/hardware-health results, selected controller path, RAM target, boot-drive arrangement, storage topology, and thermal requirements.

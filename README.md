@@ -9,12 +9,15 @@ This repository documents systems I have actually built, configured, tested, bro
 Here are some of the strongest projects and troubleshooting case studies from my homelab:
 
 - [Current Homelab Architecture](architecture/current-homelab.md)
+- [Homelab Architecture Diagrams](architecture/diagram.md)
+- [Future NAS Architecture](architecture/future-nas.md)
+- [Ansible Health Check](automation/ansible-health-check.md)
 - [Ansible SSH-Agent Troubleshooting](troubleshooting/ansible-ssh-agent.md)
+- [Docker Networking](networking/docker-networking.md)
 - [Docker Firewall Troubleshooting](troubleshooting/docker-firewall.md)
 - [Immich Backup Automation](automation/immich-backup.md)
 - [Immich Burst Review Automation](automation/immich-burst-review.md)
 - [Homelab Monitoring Stack](services/monitoring-stack.md)
-- [Future NAS Architecture](architecture/future-nas.md)
 
 ## Current Environment
 
@@ -166,8 +169,6 @@ Documentation will be added gradually as each project is cleaned up and sanitize
 
 Planned write-ups include:
 
-- Ansible health checks
-- Docker networking
 - Pi-hole
 - Tailscale
 - systemd automation

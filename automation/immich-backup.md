@@ -138,6 +138,23 @@ The current deletion retention period is:
 
 This provides a recovery window before deleted data is permanently removed from the backup workflow.
 
+## Peer Review and Future Improvements
+
+After getting peer feedback from a friend with homelab/IT experience, I reviewed the backup strategy and identified several possible improvements.
+
+The feedback included:
+
+- keep the existing Sunday 03:00 full backup
+- consider adding a daily copy-only `rsync` later
+- increase deleted-file retention from 30 days to approximately 60–90 days
+- periodically test restores instead of assuming backups are usable
+
+I decided to keep the current weekly backup design for now. The existing 30-day retention period also remains in place temporarily, with a 60-day target as a future improvement.
+
+Restore testing is also part of the longer-term backup practice. The implementation and troubleshooting of this backup system are my own; the outside feedback was advisory and helped me evaluate the design more critically.
+
+This was a useful reminder that infrastructure improves when design decisions are reviewed rather than treated as finished after the first successful deployment.
+
 ## Testing
 
 Before depending on the automated schedule, I manually tested the backup process.
@@ -263,7 +280,13 @@ Separating those responsibilities makes automation easier to manage and troubles
 
 A backup that has never been restored or at least verified is only an assumption.
 
-I manually tested the workflow and then confirmed that the first scheduled execution also completed successfully.
+I manually tested the workflow and then confirmed that the first scheduled execution also completed successfully. Periodic restore testing is a future improvement so that backup validation includes recoverability, not just successful synchronization.
+
+### Peer Review Improves Design
+
+Outside feedback did not change who built or operates the system, but it helped identify areas worth revisiting: retention length, synchronization frequency, and restore validation.
+
+This reinforced the value of documenting not only what I implemented, but also why I chose to keep, defer, or change specific design decisions.
 
 ### Logs Are Part of the Design
 
@@ -283,4 +306,6 @@ The Immich photo library now has an automated weekly backup workflow using:
 - logging
 - manual and scheduled verification
 
-This project gave me practical experience building a repeatable Linux backup workflow instead of relying on manual file copies.
+The current design remains a Sunday 03:00 weekly backup with 30-day deleted-file retention. Future improvements under consideration include a 60-day retention window, optional daily copy-only synchronization, and periodic restore testing.
+
+This project gave me practical experience building a repeatable Linux backup workflow instead of relying on manual file copies, while also showing how peer review can influence future infrastructure improvements without changing implementation ownership.

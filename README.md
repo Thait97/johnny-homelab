@@ -13,8 +13,8 @@ Here are some of the strongest projects and troubleshooting case studies from my
 - [Docker Firewall Troubleshooting](troubleshooting/docker-firewall.md)
 - [Immich Backup Automation](automation/immich-backup.md)
 - [Immich Burst Review Automation](automation/immich-burst-review.md)
-
-
+- [Homelab Monitoring Stack](services/monitoring-stack.md)
+- [Future NAS Architecture](architecture/future-nas.md)
 
 ## Current Environment
 
@@ -166,15 +166,8 @@ Documentation will be added gradually as each project is cleaned up and sanitize
 
 Planned write-ups include:
 
-- Homelab architecture
 - Ansible health checks
-- SSH-agent troubleshooting
-- Docker `DOCKER-USER` firewall
-- Immich backup automation
-- Immich burst-review automation
-- Monitoring stack
 - Docker networking
-- Storage architecture
 - Pi-hole
 - Tailscale
 - systemd automation
@@ -206,7 +199,7 @@ The future storage design is centered around a dedicated NAS using:
 
 Persistent storage will remain centralized while application compute is separated where practical.
 
-This architecture is still being designed and will be documented separately from the systems that are currently deployed.
+This architecture is still being designed and is documented separately from the systems that are currently deployed.
 
 ## What I'm Learning
 

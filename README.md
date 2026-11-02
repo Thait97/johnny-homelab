@@ -1,40 +1,42 @@
 # Johnny's Homelab
 
-A hands-on homelab environment I use to build practical experience with Linux administration, Docker, networking, automation, monitoring, storage, security, and infrastructure troubleshooting.
+A hands-on homelab I use to build practical experience with Linux administration, Docker, networking, automation, monitoring, storage, security, and infrastructure troubleshooting.
 
-This repository documents systems I have actually built, configured, tested, broken, repaired, and improved while developing my IT and infrastructure skills.
+This repository documents systems I have **built and operated**, along with clearly labeled **future architecture** I am designing as the lab grows.
 
-## Featured Projects
+The main portfolio story is not simply that I installed self-hosted services. It is that I built infrastructure, encountered real failures, isolated the affected layer, fixed the issue, made solutions persistent where appropriate, and verified the result.
 
-Here are some of the strongest projects and troubleshooting case studies from my homelab:
+## Featured Troubleshooting
 
-### Architecture
+1. [Docker Firewall / DOCKER-USER](troubleshooting/docker-firewall.md) — Docker, UFW, iptables, systemd, reboot verification
+2. [Ansible SSH-Agent Failure](troubleshooting/ansible-ssh-agent.md) — SSH authentication, `ssh-agent`, Ansible verification
+3. [fwupd systemd Troubleshooting](troubleshooting/fwupd-refresh.md) — service status, logs, direct command testing, verification
+4. [Storage Mount Troubleshooting](troubleshooting/storage-mounts.md) — `lsblk`, `df`, mount-state reasoning
+5. [Nextcloud Compose Troubleshooting](troubleshooting/nextcloud-compose.md) — Docker Compose/YAML debugging
+6. [Pi-hole Port 53 Troubleshooting](troubleshooting/pihole-port-53.md) — DNS listeners, socket binding, `ss`
+
+## Featured Automation
+
+1. [Immich Backup Automation](automation/immich-backup.md) — weekly rsync-based backup/synchronization, retention, systemd
+2. [Ansible Health Check](automation/ansible-health-check.md) — read-only infrastructure checks over SSH
+3. [Ubuntu Update Checker + Notifications](automation/update-checker.md) — systemd, monitoring, ntfy/iPhone notification path
+4. [Immich Burst Review Automation](automation/immich-burst-review.md) — Bash, SQL, PostgreSQL, Python, REST API, state tracking
+5. [Docker Monitoring Network Repair](networking/docker-networking.md) — Docker DNS, user-defined networks, persistent systemd repair
+6. [Mac Homelab Dashboard Launcher](automation/mac-dashboard.md) — shell scripting, symlinks, PATH, workflow automation
+
+## Current Architecture & Services
 
 - [Current Homelab Architecture](architecture/current-homelab.md)
 - [Homelab Architecture Diagrams](architecture/diagram.md)
-- [Future NAS Architecture](architecture/future-nas.md)
-
-### Automation
-
-- [Ansible Health Check](automation/ansible-health-check.md)
-- [Immich Backup Automation](automation/immich-backup.md)
-- [Immich Burst Review Automation](automation/immich-burst-review.md)
-- [Network Watchdog Automation](automation/network-watchdog.md)
-
-### Networking & Services
-
-- [Docker Networking](networking/docker-networking.md)
-- [Tailscale Remote Access](networking/tailscale.md)
-- [Pi-hole DNS Filtering](services/pihole.md)
 - [Homelab Monitoring Stack](services/monitoring-stack.md)
+- [Pi-hole DNS Filtering](services/pihole.md)
+- [Tailscale Remote Access](networking/tailscale.md)
 
-### Troubleshooting
+## Future / In-Progress Architecture
 
-- [Ansible SSH-Agent Troubleshooting](troubleshooting/ansible-ssh-agent.md)
-- [Docker Firewall Troubleshooting](troubleshooting/docker-firewall.md)
-- [fwupd Refresh Troubleshooting](troubleshooting/fwupd-refresh.md)
-- [Storage Mount Troubleshooting](troubleshooting/storage-mounts.md)
-- [Nextcloud Compose Troubleshooting](troubleshooting/nextcloud-compose.md)
+- [Future NAS Architecture](architecture/future-nas.md) — **planned, not yet deployed**
+- [Network Watchdog Design — In Progress](automation/network-watchdog.md) — **in development, not yet presented as fully deployed**
+- Future Immich/Jellyfin compute and 2.5 GbE rack design remain part of the planned architecture
 
 ## Current Environment
 
@@ -51,8 +53,7 @@ Here are some of the strongest projects and troubleshooting case studies from my
 ### Core Technologies
 
 - Linux / Ubuntu Server
-- Docker
-- Docker Compose
+- Docker / Docker Compose
 - systemd
 - Ansible
 - Bash
@@ -62,73 +63,45 @@ Here are some of the strongest projects and troubleshooting case studies from my
 - Samba
 - rsync
 
-## Services
-
-My current homelab includes several self-hosted services used for storage, monitoring, administration, and learning.
+## Current Services
 
 - **Immich** — self-hosted photo management
-- **Nextcloud** — file and cloud services
+- **Nextcloud** — file/cloud services
 - **Uptime Kuma** — service availability monitoring
 - **Netdata** — system performance monitoring
 - **Portainer** — Docker management
-- **Cockpit** — Linux server administration
+- **Cockpit** — Linux host administration
 - **Pi-hole** — DNS-level filtering
 - **Samba** — SMB file sharing
-- **Tailscale** — secure remote network access
+- **Tailscale** — remote network access
 
-## Automation
-
-I am gradually automating routine homelab operations rather than relying entirely on manual administration.
-
-Current projects include:
+## Current Automation
 
 - Read-only Ansible health checks
-- Weekly Immich backups with `systemd` timers and `rsync`
-- Automated Immich burst-photo review
+- Weekly rsync-based Immich backup/synchronization with `systemd` scheduling and retention
+- Immich burst-photo review workflow
 - Persistent Docker firewall rules
-- Docker network repair automation
-- Network health monitoring
-- Mac dashboard launcher for homelab services
+- Persistent Docker monitoring-network repair
+- Ubuntu update/reboot attention checks with monitoring/notification integration
+- Service and network health monitoring
+- Mac dashboard launcher
 
-## Monitoring
+The custom **Network Watchdog** is documented separately as **In Progress** rather than as a completed deployment.
 
-I use multiple tools because each provides a different view of the environment.
+## Monitoring Philosophy
 
-**Uptime Kuma** monitors whether services are reachable.
+I use multiple tools because each answers a different question:
 
-**Netdata** provides live host metrics such as CPU, memory, disk, and network activity.
+- **Uptime Kuma:** Is the service reachable?
+- **Netdata:** What is the host doing right now?
+- **Portainer:** What is happening inside Docker?
+- **Cockpit:** What is happening on the Linux host?
 
-**Portainer** provides visibility into Docker containers and Compose workloads.
-
-**Cockpit** provides host-level Linux administration.
-
-One of the most important lessons from operating the lab has been that:
-
-> A running container does not necessarily mean the application is healthy.
-
-Application endpoints, logs, storage mounts, databases, caches, networking, and dependencies still need to be verified.
-
-## Networking & Security
-
-Current networking and security work includes:
-
-- UFW firewall configuration
-- Docker `DOCKER-USER` firewall rules
-- Tailscale remote access
-- SSH key authentication
-- User-defined Docker networks
-- Docker DNS/service-name communication
-- Pi-hole DNS filtering
-- LAN service exposure review
-- Port and listening-socket auditing
-
-I also built persistent firewall rules to control traffic reaching Docker-published services because Docker's networking rules can bypass assumptions made when using UFW alone.
+A running container does not necessarily mean the application inside it is healthy. Logs, storage, databases, networking, dependencies, and the user-facing endpoint may still need verification.
 
 ## Storage & Backups
 
-Current storage includes separate disks for application data, photos, and backups.
-
-Important mount points include:
+Important current mount points include:
 
 ```text
 /mnt/photos
@@ -136,41 +109,20 @@ Important mount points include:
 /mnt/immich-backup
 ```
 
-The Immich photo library is backed up weekly using a custom script, `rsync`, and a `systemd` timer.
-
-The backup process includes:
-
-- mount verification
-- available-space checks
-- synchronization
-- retention handling
-- service-health verification
-
-I also verify storage using tools such as:
+I verify storage with tools such as:
 
 ```bash
 lsblk
 df -h
 ```
 
-because the existence of a mount-point directory does not prove that the underlying drive is actually mounted.
+because a mount-point directory existing does not prove the intended disk is actually mounted.
 
-## Troubleshooting
+The Immich workflow currently runs Sunday at 03:00 with 30-day deleted-file retention. Longer retention, optional daily copy-only synchronization, and periodic restore testing are documented as **future improvements**, not current deployment.
 
-A major goal of this repository is documenting troubleshooting methodology rather than only documenting successful configurations.
+## Troubleshooting Approach
 
-Examples include:
-
-- diagnosing an Ansible `Permission denied (publickey)` failure
-- identifying an unloaded SSH key in `ssh-agent`
-- investigating failed `systemd` units
-- repairing Docker networking between monitoring services
-- understanding Docker firewall behavior
-- diagnosing missing storage mounts
-- investigating DNS port conflicts
-- debugging Docker Compose configuration
-
-For each larger incident, I focus on:
+For larger incidents I document:
 
 1. Problem
 2. Environment
@@ -180,21 +132,26 @@ For each larger incident, I focus on:
 6. Verification
 7. Lessons learned
 
-## Portfolio Status
+Examples of sanitized proof already included in case studies include:
 
-The core Version 1 documentation is now in place. Future improvements will focus more on evidence and presentation than adding documentation for its own sake.
+```text
+ok=12
+changed=0
+unreachable=0
+failed=0
+```
 
-Planned improvements include:
+and:
 
-- sanitized screenshots of monitoring and administration tools
-- command-output examples where they strengthen a case study
-- diagrams updated as the rack and NAS move from planning to deployment
-- configuration examples with secrets removed
-- additional troubleshooting incidents as they happen naturally
+```text
+0 loaded units listed.
+```
+
+The next presentation improvement is adding selected sanitized screenshots/output where they provide stronger evidence than prose alone.
 
 ## Future Architecture
 
-I am also designing a more modular rack-based homelab.
+The future storage/rack design is clearly separated from the current lab.
 
 Current direction includes:
 
@@ -209,38 +166,29 @@ Router
    +-- Monitoring / Management
 ```
 
-The future storage design is centered around a dedicated NAS using:
-
-- Mini/Tiny compute system
-- PCIe HBA in IT mode
-- External multi-drive storage
-- ZFS
-- 2.5 GbE networking
-
-Persistent storage will remain centralized while application compute is separated where practical.
-
-This architecture is still being designed and is documented separately from the systems that are currently deployed.
+The NAS direction includes a Mini/Tiny controller, PCIe HBA in IT mode, external multi-drive storage, ZFS/TrueNAS SCALE, and 2.5 GbE. This hardware is **planned and not yet deployed**.
 
 ## What I'm Learning
 
 This homelab is helping me develop practical experience with:
 
 - Linux system administration
-- Networking fundamentals
+- SSH and remote administration
 - Docker and container networking
-- Infrastructure monitoring
-- Troubleshooting methodology
-- Storage and backups
-- Automation
+- systemd services and timers
 - Ansible
-- Bash
-- systemd
-- Firewall configuration
-- Remote administration
-- Infrastructure design
+- Bash automation
+- monitoring and logs
+- storage and mounts
+- backup design
+- firewall configuration
+- DNS
+- layered troubleshooting
+- infrastructure design
+- verifying changes instead of assuming they worked
 
-My goal is not simply to deploy services, but to understand how they work, how they fail, and how to troubleshoot them methodically.
+My goal is not to present myself as a senior systems engineer. The goal is to show credible hands-on junior infrastructure/IT experience and a methodical approach to learning and troubleshooting.
 
 ---
 
-> This repository contains sanitized documentation from my personal homelab. Credentials, API keys, authentication tokens, public IP addresses, private keys, and other sensitive information are intentionally excluded.
+> This repository contains sanitized documentation from my personal homelab. Credentials, private keys, API keys, tokens, secret webhook URLs, private ntfy topics, Wi-Fi/router credentials, public WAN addresses, and secret-bearing `.env` files are intentionally excluded.

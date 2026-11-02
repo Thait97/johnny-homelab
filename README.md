@@ -8,16 +8,33 @@ This repository documents systems I have actually built, configured, tested, bro
 
 Here are some of the strongest projects and troubleshooting case studies from my homelab:
 
+### Architecture
+
 - [Current Homelab Architecture](architecture/current-homelab.md)
 - [Homelab Architecture Diagrams](architecture/diagram.md)
 - [Future NAS Architecture](architecture/future-nas.md)
+
+### Automation
+
 - [Ansible Health Check](automation/ansible-health-check.md)
-- [Ansible SSH-Agent Troubleshooting](troubleshooting/ansible-ssh-agent.md)
-- [Docker Networking](networking/docker-networking.md)
-- [Docker Firewall Troubleshooting](troubleshooting/docker-firewall.md)
 - [Immich Backup Automation](automation/immich-backup.md)
 - [Immich Burst Review Automation](automation/immich-burst-review.md)
+- [Network Watchdog Automation](automation/network-watchdog.md)
+
+### Networking & Services
+
+- [Docker Networking](networking/docker-networking.md)
+- [Tailscale Remote Access](networking/tailscale.md)
+- [Pi-hole DNS Filtering](services/pihole.md)
 - [Homelab Monitoring Stack](services/monitoring-stack.md)
+
+### Troubleshooting
+
+- [Ansible SSH-Agent Troubleshooting](troubleshooting/ansible-ssh-agent.md)
+- [Docker Firewall Troubleshooting](troubleshooting/docker-firewall.md)
+- [fwupd Refresh Troubleshooting](troubleshooting/fwupd-refresh.md)
+- [Storage Mount Troubleshooting](troubleshooting/storage-mounts.md)
+- [Nextcloud Compose Troubleshooting](troubleshooting/nextcloud-compose.md)
 
 ## Current Environment
 
@@ -144,16 +161,16 @@ A major goal of this repository is documenting troubleshooting methodology rathe
 
 Examples include:
 
-- Diagnosing an Ansible `Permission denied (publickey)` failure
-- Identifying an unloaded SSH key in `ssh-agent`
-- Investigating failed `systemd` units
-- Repairing Docker networking between monitoring services
-- Understanding Docker firewall behavior
-- Diagnosing missing storage mounts
-- Investigating DNS port conflicts
-- Debugging Docker Compose configuration
+- diagnosing an Ansible `Permission denied (publickey)` failure
+- identifying an unloaded SSH key in `ssh-agent`
+- investigating failed `systemd` units
+- repairing Docker networking between monitoring services
+- understanding Docker firewall behavior
+- diagnosing missing storage mounts
+- investigating DNS port conflicts
+- debugging Docker Compose configuration
 
-For each larger incident, I plan to document:
+For each larger incident, I focus on:
 
 1. Problem
 2. Environment
@@ -163,15 +180,17 @@ For each larger incident, I plan to document:
 6. Verification
 7. Lessons learned
 
-## Current Projects
+## Portfolio Status
 
-Documentation will be added gradually as each project is cleaned up and sanitized for public use.
+The core Version 1 documentation is now in place. Future improvements will focus more on evidence and presentation than adding documentation for its own sake.
 
-Planned write-ups include:
+Planned improvements include:
 
-- Pi-hole
-- Tailscale
-- systemd automation
+- sanitized screenshots of monitoring and administration tools
+- command-output examples where they strengthen a case study
+- diagrams updated as the rack and NAS move from planning to deployment
+- configuration examples with secrets removed
+- additional troubleshooting incidents as they happen naturally
 
 ## Future Architecture
 

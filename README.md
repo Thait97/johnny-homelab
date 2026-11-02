@@ -4,6 +4,18 @@ A hands-on homelab environment I use to build practical experience with Linux ad
 
 This repository documents systems I have actually built, configured, tested, broken, repaired, and improved while developing my IT and infrastructure skills.
 
+## Featured Projects
+
+Here are some of the strongest projects and troubleshooting case studies from my homelab:
+
+- [Current Homelab Architecture](architecture/current-homelab.md)
+- [Ansible SSH-Agent Troubleshooting](troubleshooting/ansible-ssh-agent.md)
+- [Docker Firewall Troubleshooting](troubleshooting/docker-firewall.md)
+- [Immich Backup Automation](automation/immich-backup.md)
+- [Immich Burst Review Automation](automation/immich-burst-review.md)
+
+
+
 ## Current Environment
 
 ### Main Server

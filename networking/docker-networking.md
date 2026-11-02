@@ -1,4 +1,6 @@
-# Docker Networking
+# Docker Networking and Persistent Monitoring Network Repair
+
+**Skills demonstrated:** Docker | Docker Compose | Container networking | DNS | systemd | Troubleshooting
 
 ## Project Overview
 
@@ -10,113 +12,73 @@ I created a user-defined Docker network named:
 monitoring
 ```
 
-and connected services such as:
+and connected:
 
 ```text
 uptime-kuma
 portainer
 ```
 
-This allows Uptime Kuma to reach Portainer using Docker DNS:
+Uptime Kuma can then monitor Portainer using Docker DNS:
 
 ```text
 portainer:9443
 ```
 
-instead of using a container IP that may change after restarts.
+instead of a container IP that may change after a restart or recreation.
 
 ## Problem
 
-Using container IP addresses directly is fragile.
-
-A container might have an address such as:
-
-```text
-172.x.x.x
-```
-
-but Docker can assign a different address after a container is recreated or restarted.
-
-If a monitoring target is configured with that temporary IP, the monitor can fail even though the application itself is healthy.
+Using container IP addresses directly is fragile. Docker may assign a different address after a container is recreated, so a monitor pointed at a hard-coded `172.x.x.x` address can fail even though the application is healthy.
 
 ## Better Approach
 
-A user-defined Docker network provides built-in DNS resolution between attached containers.
-
-Conceptually:
+A user-defined Docker network provides DNS resolution between attached containers.
 
 ```text
 Uptime Kuma
      |
-     | Docker DNS lookup
+     | Docker DNS
      v
-portainer
-     |
-     v
-Port 9443
-```
-
-The monitoring target can therefore use:
-
-```text
 portainer:9443
 ```
 
-rather than a hard-coded container IP.
-
-## Why User-Defined Networks Matter
-
-A user-defined bridge network gives containers a predictable logical relationship even when their individual IP addresses change.
-
-This is useful because application configuration can reference service names instead of infrastructure details that Docker manages dynamically.
+This gives the monitor a stable logical target.
 
 ## Troubleshooting Scenario
 
-When Uptime Kuma could no longer resolve or reach Portainer by hostname, the first place to check was the shared Docker network.
+When Uptime Kuma could no longer resolve Portainer by hostname, I checked the shared network before changing firewalls or application settings.
 
-The troubleshooting question became:
+Useful checks included:
+
+```bash
+docker ps
+docker compose ps
+docker network ls
+docker network inspect monitoring
+```
+
+The main question was:
 
 ```text
 Are both containers still attached to the monitoring network?
 ```
 
-rather than immediately changing firewall rules or application configuration.
-
-## Useful Checks
-
-General container status:
-
-```bash
-docker ps
-```
-
-Compose stack status:
-
-```bash
-docker compose ps
-```
-
-Available Docker networks:
-
-```bash
-docker network ls
-```
-
-Inspect a specific network:
-
-```bash
-docker network inspect monitoring
-```
-
-That inspection can show which containers are attached to the network.
-
 ## Persistent Repair
 
-I also created a persistent repair mechanism to reconnect the monitoring relationship after startup if needed.
+I turned the repair into a persistent startup solution rather than leaving it as a manual command.
 
-This reinforced an important infrastructure lesson:
+Script:
 
-> A manual fix is useful for diagnosis, but a production-style solution should survive restart and reboot.
+```text
+/usr/local/sbin/homelab-monitoring-network.sh
+```
+
+systemd service:
+
+```text
+homelab-monitoring-network.service
+```
 
 Conceptually:
 
@@ -124,37 +86,35 @@ Conceptually:
 System startup
      |
      v
-Docker starts
+Docker / containers start
      |
      v
-Containers start
+homelab-monitoring-network.service
      |
      v
-Monitoring network relationship verified/repaired
+monitoring network relationship verified/repaired
      |
      v
-Uptime Kuma can resolve Portainer by name
+Uptime Kuma resolves Portainer by name
 ```
 
-## Docker DNS vs Container IP
+This reinforced an important infrastructure lesson:
 
-The key distinction is:
+> A manual fix is useful for diagnosis, but a stronger solution should survive restart and reboot.
+
+## Docker DNS vs Container IP
 
 ```text
 Container IP
 = implementation detail that may change
 
-Docker service/container name on a shared user-defined network
-= stable logical target for service-to-service communication
+Container/service name on a shared user-defined network
+= stable logical target
 ```
-
-This made the monitoring configuration more reliable and easier to understand.
 
 ## Relationship to Host Networking
 
-Docker networking is only one layer of connectivity.
-
-A service may still depend on:
+Docker networking is only one connectivity layer. A service may still depend on:
 
 - host interface binding
 - published ports
@@ -162,48 +122,17 @@ A service may still depend on:
 - `DOCKER-USER` iptables rules
 - LAN routing
 - Tailscale
-- application-level health
+- application health
 
-That means a network failure should be isolated layer by layer rather than assuming every connectivity issue is caused by Docker itself.
-
-## Troubleshooting Model
-
-```text
-Application
-    |
-Container
-    |
-Docker network / DNS
-    |
-Published port if needed
-    |
-Host firewall
-    |
-Host interface
-    |
-LAN / Tailscale / client
-```
+So I troubleshoot network failures layer by layer rather than assuming Docker is always the problem.
 
 ## What I Learned
 
-### Do Not Depend on Dynamic Container IPs
-
-Container IP addresses can change, especially after recreation.
-
-### Docker Provides Internal DNS
-
-Containers on the same user-defined network can communicate using names, which is more stable than hard-coded IP addresses.
-
-### Check the Simplest Shared Dependency First
-
-If one monitor fails while the rest of the server is healthy, the problem may be the specific container-to-container path rather than the entire host or network.
-
-### Persistence Matters
-
-A repair that has to be manually repeated after every startup is not a complete infrastructure solution.
+- Do not depend on dynamic container IPs.
+- User-defined Docker networks provide useful internal DNS.
+- Check the smallest shared dependency first.
+- Persistent systemd-managed repairs are more reliable than repeated manual fixes.
 
 ## Result
 
-The monitoring services now use a shared Docker network so Uptime Kuma can reach Portainer by name instead of depending on changing container IP addresses.
-
-This project gave me practical experience with Docker bridge networks, internal DNS, service-to-service communication, startup persistence, and layered network troubleshooting.
+The monitoring services use a shared Docker network so Uptime Kuma can reach Portainer by name, and a persistent systemd-managed repair mechanism helps restore that relationship after startup when needed.

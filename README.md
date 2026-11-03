@@ -8,12 +8,13 @@ The main portfolio story is not simply that I installed self-hosted services. It
 
 ## Featured Troubleshooting
 
-1. [Docker Firewall / DOCKER-USER](troubleshooting/docker-firewall.md) — Docker, UFW, iptables, systemd, reboot verification
-2. [Ansible SSH-Agent Failure](troubleshooting/ansible-ssh-agent.md) — SSH authentication, `ssh-agent`, Ansible verification
-3. [fwupd systemd Troubleshooting](troubleshooting/fwupd-refresh.md) — service status, logs, direct command testing, verification
-4. [Storage Mount Troubleshooting](troubleshooting/storage-mounts.md) — `lsblk`, `df`, mount-state reasoning
-5. [Nextcloud Compose Troubleshooting](troubleshooting/nextcloud-compose.md) — Docker Compose/YAML debugging
-6. [Pi-hole Port 53 Troubleshooting](troubleshooting/pihole-port-53.md) — DNS listeners, socket binding, `ss`
+1. [Immich External-Library Re-Indexing — Validation Pending](troubleshooting/immich-external-library-reindexing.md) — PostgreSQL asset IDs, Docker mounts, scheduled scans, automation isolation
+2. [Docker Firewall / DOCKER-USER](troubleshooting/docker-firewall.md) — Docker, UFW, iptables, systemd, reboot verification
+3. [Ansible SSH-Agent Failure](troubleshooting/ansible-ssh-agent.md) — SSH authentication, `ssh-agent`, Ansible verification
+4. [fwupd systemd Troubleshooting](troubleshooting/fwupd-refresh.md) — service status, logs, direct command testing, verification
+5. [Storage Mount Troubleshooting](troubleshooting/storage-mounts.md) — `lsblk`, `df`, mount-state reasoning
+6. [Nextcloud Compose Troubleshooting](troubleshooting/nextcloud-compose.md) — Docker Compose/YAML debugging
+7. [Pi-hole Port 53 Troubleshooting](troubleshooting/pihole-port-53.md) — DNS listeners, socket binding, `ss`
 
 ## Featured Automation
 

@@ -38,6 +38,16 @@ Before purchasing the remaining NAS hardware, I will inspect the machine to veri
 
 The final storage-controller design will be selected only after the physical system is validated.
 
+## Six-Drive NAS Engineering Review — November 4, 2026
+
+The newest research is documented in the dedicated [Lenovo M720q Six-Drive NAS project](../projects/lenovo-m720q-nas/README.md), including a [decision log](../projects/lenovo-m720q-nas/decision-log.md) and [validation checklist](../projects/lenovo-m720q-nas/validation-checklist.md).
+
+The current preferred **evaluation** path is M720q PCIe x8 riser → **LSI 9207-8e** → external SAS cabling → separately powered/cooled **six-drive** shelf. The **LSI 9300-8e** remains an alternative. A Tiny5 riser `01AJ940` and dedicated 40 mm fan are also **research candidates only**.
+
+**Critical blockers:** physical riser/card/bracket and lid clearance, controller firmware/TrueNAS compatibility, external SAS connectivity, power, and a directed cooling solution meeting the HBA's specified airflow requirements. These have **not** been tested on the purchased machine. The M.2/ASM1166 approach remains an earlier alternative under review, not the approved build.
+
+**Status: WAIT — further purchases on hold until physical M720q inspection and engineering approval.** The operational Ubuntu homelab and its Immich backup disks remain unchanged; migration is a separate future project.
+
 ## Architecture Validation Still Required
 
 Two controller paths are currently being considered.
@@ -80,7 +90,7 @@ ZFS storage
 
 Neither path is final yet.
 
-The HBA option may become preferable if the physical machine supports it cleanly.
+The current research favors testing the PCIe HBA approach first, but the final controller path remains unapproved until fit, cooling, compatibility, and cost are validated.
 
 ## Components Not Yet Purchased
 

@@ -35,6 +35,7 @@ The main portfolio story is not simply that I installed self-hosted services. It
 
 ## Future / In-Progress Architecture
 
+- [Lenovo M720q Six-Drive NAS — Engineering Research & Validation](projects/lenovo-m720q-nas/README.md) — **controller purchased; riser/HBA/cooling/enclosure unapproved; NOT deployed**
 - [Future NAS Architecture](architecture/future-nas.md) — **planned, not yet deployed**
 - [Network Watchdog Design — In Progress](automation/network-watchdog.md) — **in development, not yet presented as fully deployed**
 - Future Immich/Jellyfin compute and 2.5 GbE rack design remain part of the planned architecture
@@ -167,7 +168,7 @@ Router
    +-- Monitoring / Management
 ```
 
-The NAS direction includes a Mini/Tiny controller, PCIe HBA in IT mode, external multi-drive storage, ZFS/TrueNAS SCALE, and 2.5 GbE. This hardware is **planned and not yet deployed**.
+A Lenovo M720q Tiny has been **purchased** as the potential NAS controller; it is **not installed, configured, or deployed**. PCIe HBA, six-drive enclosure, cooling, cables, ZFS/TrueNAS SCALE, and any network upgrades remain subject to engineering validation and purchase approval. See the [six-drive NAS research project](projects/lenovo-m720q-nas/README.md).
 
 ## What I'm Learning
 

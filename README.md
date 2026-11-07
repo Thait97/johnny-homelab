@@ -68,7 +68,6 @@ The main portfolio story is not simply that I installed self-hosted services. It
 ## Current Services
 
 - **Immich** — self-hosted photo management
-- **Nextcloud** — file/cloud services
 - **Uptime Kuma** — service availability monitoring
 - **Netdata** — system performance monitoring
 - **Portainer** — Docker management
@@ -76,6 +75,10 @@ The main portfolio story is not simply that I installed self-hosted services. It
 - **Pi-hole** — DNS-level filtering
 - **Samba** — SMB file sharing
 - **Tailscale** — remote network access
+
+## Previously Deployed Services
+
+- **Nextcloud** — previously operated as a Docker Compose stack, removed from the Ubuntu homelab on November 6, 2026 during the transition toward dedicated storage and compute nodes. The [Nextcloud Compose troubleshooting case study](troubleshooting/nextcloud-compose.md) remains as historical project evidence.
 
 ## Current Automation
 
@@ -89,6 +92,12 @@ The main portfolio story is not simply that I installed self-hosted services. It
 - Mac dashboard launcher
 
 The custom **Network Watchdog** is documented separately as **In Progress** rather than as a completed deployment.
+
+## November 6, 2026 — Final Docker Health Check
+
+After restoring Ethernet connectivity to the Ubuntu server, a later verification confirmed **all 9 Docker containers healthy**, including Immich components, Pi-hole, Uptime Kuma, Portainer, and both OpenGym containers. This replaces the earlier intermediate observation that the OpenGym containers were still in `health: starting`.
+
+See the [November 6 NAS and Ubuntu verification report](projects/lenovo-m720q-nas/progress-2026-11-06.md).
 
 ## Monitoring Philosophy
 

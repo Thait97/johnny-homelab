@@ -1,57 +1,68 @@
-# Lenovo ThinkCentre M720q — Six-Drive NAS (Planning & Validation)
+# Lenovo ThinkCentre M720q — TrueNAS Controller & Future Five-Bay NAS
 
-**Status: WAIT — engineering validation required. Not deployed.**  
-**Research snapshot:** November 4, 2026  
+**Status: TrueNAS SCALE installed and locally accessible; storage/DAS/production NAS not deployed. Further hardware purchases: HOLD.**  
+**Research baseline:** November 4, 2026  
+**Hands-on milestone:** November 6, 2026 — [Installation & verification report](progress-2026-11-06.md)  
 **Skills practiced:** hardware compatibility research | storage architecture | PCIe/SAS | thermal planning | risk management | technical documentation
 
 ## Objective
 
-I am planning to use a Lenovo ThinkCentre M720q Tiny as a **storage-only NAS controller** connected to a separately powered, cooled six-drive HDD enclosure. My goal is centralized storage for Immich, Nextcloud, Jellyfin, and other workloads while keeping application compute on separate nodes.
+I installed **TrueNAS SCALE 25.10.x** on a Lenovo ThinkCentre M720q Tiny to prepare it as a **storage-only NAS controller**. The current preferred *unapproved* enclosure plan is a separately powered/cooled **five-bay hot-swap cage** on a heavy-duty rack shelf (with room for a second cage later). My goal is centralized storage for Immich, Nextcloud, Jellyfin, and other workloads while keeping application compute on separate nodes.
 
-This is an **engineering research and purchasing project**, not a completed NAS build. Actual installation, cooling, drive detection, ZFS configuration, performance, and operational reliability have **not** been tested.
+The **controller operating-system installation, initial boot, disk identification, and wired LAN web access have been verified**. The expansion HBA, external drive cage, HDD detection, ZFS data pools, shares, cooling, performance, and reliability **have not been tested or deployed**.
 
 ## Acquired vs. Proposed Hardware
 
 | Component | Current status |
 | --- | --- |
-| Lenovo ThinkCentre M720q Tiny | **Purchased**; physical inspection/validation pending |
-| Intel Core i5-8400T | Listed specification of purchased system; check during inspection |
-| 8 GB DDR4 | Listed specification; DIMM arrangement not inspected |
-| 256 GB SSD | Listed specification; M.2 vs 2.5-inch interface not verified |
+| Lenovo ThinkCentre M720q Tiny | **Purchased; TrueNAS installed and booted**; expansion fitment pending |
+| Intel Core i5-8400T | Controller processor, documented in November 6 setup |
+| 8 GB DDR4 | Installed capacity reported; DIMM arrangement not yet documented |
+| SanDisk X400 256 GB SATA SSD | **Verified TrueNAS boot drive** |
 | Tiny5 PCIe x8 riser `01AJ940` | Research candidate; **not purchased or fit-tested** |
 | LSI 9207-8e | **Preferred research candidate**, not purchased |
 | LSI 9300-8e | Alternative candidate, not purchased |
 | Directed 40 mm fan / duct / replacement lid | Conceptual; not purchased or validated |
-| External SAS cabling, six-drive shelf, drive PSU, HDDs | Not finalized or purchased |
-| TrueNAS SCALE / ZFS | Being evaluated; **not installed/deployed** |
+| Toshiba 256 GB NVMe | Existing Windows partitions retained; planned physical removal, not erased |
+| External SAS cabling, RackChoice five-bay cage, drive PSU, HDDs | Not finalized or purchased |
+| TrueNAS SCALE 25.10.x | **Installed; boot and local web UI verified**; no data pool or shares |
 
-### Proposed topology (not yet built)
+### Proposed storage expansion (not yet built)
 
 ```text
-Lenovo M720q Tiny (purchased; not deployed)
-        |
-        | candidate Tiny5 PCIe x8 riser
-        v
-External-port SAS HBA (9207-8e / 9300-8e candidate)
-        |
-        | appropriate SAS breakout/connectivity (TBD)
-        v
-Six-drive external 3.5-inch HDD enclosure (not acquired)
-        +-- independent, correctly sized HDD power
-        +-- independent drive and controller cooling
-        |
-        v
-Possible TrueNAS SCALE / ZFS pool (not created)
-        |
-        v
-LAN connection to separate application-compute node(s)
+Router --- wired LAN --- M720q TrueNAS controller (OS installed)
+                             |
+                      PCIe riser (pending)
+                             |
+                      SAS HBA (pending)
+                             |
+                  External SAS cabling (TBD)
+                             |
+               RackChoice 5-bay hot-swap cage
+                    (not purchased)
+                       /            \
+               Drive power      Drive cooling
+                 (TBD)             (TBD)
 ```
 
-No cable type or drive topology is approved until controller selection, enclosure/backplane design, and power validation.
+The five-bay shelf-mount concept supersedes the earlier six-drive enclosure sizing plan. A second cage may be added later, subject to HBA lane capacity and separate power/cooling design. No data disks or pools have been installed.
+
+## November 6 — Confirmed Installation & Verification
+
+The full [progress report](progress-2026-11-06.md) records the following:
+
+- Installed TrueNAS SCALE on the **SanDisk X400 256 GB SATA SSD** and verified it boots.
+- Checked `lsblk -f` and `efibootmgr -v`: TrueNAS boot disk identified, both internal drives seen, and existing Windows boot entries/partitions preserved on the Toshiba NVMe.
+- Obtained a **private LAN address over Ethernet** and accessed the TrueNAS web interface from a MacBook.
+- **No data pool or NAS shares created.** The Toshiba NVMe has **not** been erased.
+- Reconnected the original Ubuntu server and verified its photo and backup mounts with `lsblk -o NAME,SIZE,MOUNTPOINTS`, plus container status via `docker ps`.
+- Immich components, Pi-hole, Uptime Kuma, and Portainer reported healthy; `opengym-api-1` and `opengym-web-1` still reported **health: starting** at the final inspection.
+
+These are *setup and point-in-time validation* results, not production storage or long-term stability tests.
 
 ## Research: HBA Candidates
 
-Figures below are **manufacturer-specification research**, *not measured operating results inside the M720q*. The two HBAs can support six drives in principle; the full installation cannot yet be called compatible.
+Figures below are **manufacturer-specification research**, *not measured operating results inside the M720q*. The two HBAs were originally researched for six drives; this earlier comparison remains relevant to evaluating the newer five-bay concept. The full installation cannot yet be called compatible.
 
 | Specification | LSI 9207-8e | LSI 9300-8e |
 | --- | --- | --- |
@@ -102,6 +113,7 @@ These are research ranges **not quotes**, confirmed totals, or authorized purcha
 
 - [Decision log](decision-log.md) — why options are shortlisted or deferred, including what could change the preferred controller
 - [Validation checklist](validation-checklist.md) — explicit unverified criteria and evidence required for approval
+- [November 6 progress report](progress-2026-11-06.md) — TrueNAS installation, network verification, and safe return to the Ubuntu server
 - [General Future NAS Architecture](../../architecture/future-nas.md) — wider NAS, storage, compute, and networking direction
 
 ## Protect the Working Homelab
@@ -110,8 +122,8 @@ The current Ubuntu server, Immich library, separate backup disk, Sunday 03:00 rs
 
 ## Next Milestone
 
-**Physical M720q inspection**: document SSD type, RAM module layout, BIOS/boot health, physical PCIe path, riser dimensions, HBA and bracket clearances, lid fit, cooling route, external connector space, and power options. Decide HBA, cabling, enclosure, and cooling **only after** evidence is recorded.
+**Next milestone: PCIe/HBA and shelf engineering validation.** Boot drive identity, TrueNAS boot, and initial LAN access are verified. Remaining checks include RAM layout, PCIe riser dimensions, HBA/bracket/cover clearance, cooling route, external connectors, drive-power safety, and five-bay cage mounting. Decide HBA, cabling, enclosure, and cooling **only after** evidence is recorded.
 
 Later, add *actual* sanitized photographs, test results, SMART/device detection, thermal measurements, and storage-pool verification. None are claimed here.
 
-**Project verdict: WAIT — purchases on hold pending engineering validation.**
+**Project verdict: Controller OS successfully installed; WAIT on additional NAS parts until engineering validation.**

@@ -6,7 +6,7 @@ I am designing a centralized NAS to separate persistent storage from application
 
 The goal is to create a storage platform that can serve photos, documents, media, backups, and other long-lived data while allowing services such as Immich and Jellyfin to run on separate compute systems.
 
-This page documents the current design direction. It is a planned architecture, not a completed deployment.
+This page documents a **partially completed controller setup** and the **still-planned storage architecture**. TrueNAS SCALE is installed and was accessed locally over Ethernet, but external storage, data pools, shares, and production NAS service are **not deployed**.
 
 ## Hardware Status — November 2026
 
@@ -16,37 +16,47 @@ I purchased a **Lenovo ThinkCentre M720q Tiny** with:
 - 8 GB DDR4 RAM
 - 256 GB SSD
 
-The system is intended to become the dedicated NAS controller, but it is **not yet deployed**.
+**November 6 update:** TrueNAS SCALE 25.10.x was successfully installed and booted from a verified **SanDisk X400 256 GB SATA SSD**. The M720q's **Toshiba 256 GB NVMe** still contains Windows partitions and was not erased. Initial local web administration was verified over Ethernet. No data pool has been created. This does **not** mean the NAS storage system is deployed.
 
-Current status:
+Current verified milestone:
 
 ```text
-Hardware acquired
-→ pending physical inspection
-→ pending architecture validation
-→ not yet deployed
+M720q purchased
+→ TrueNAS SCALE installed on SanDisk SATA boot SSD
+→ UEFI/drive inspection completed
+→ first local Ethernet/web management verified
+→ no ZFS data pool, HDD cage, shares, or production NAS deployment
 ```
 
-Before purchasing the remaining NAS hardware, I will inspect the machine to verify:
+The remaining physical expansion, HBA, drive-power, and cooling decisions still require engineering validation. [November 6 installation and Ubuntu-server verification report](../projects/lenovo-m720q-nas/progress-2026-11-06.md).
 
-- whether the included 256 GB SSD is M.2 NVMe or 2.5-inch SATA
-- the actual RAM configuration
-- available M.2 and PCIe expansion paths
-- whether the 256 GB SSD can remain the TrueNAS boot drive
-- BIOS condition and general hardware health
-- whether the M720q has usable PCIe expansion/riser capability
+## Prior Six-Drive NAS Engineering Review — November 4, 2026 (Historical Research)
 
-The final storage-controller design will be selected only after the physical system is validated.
+The earlier six-drive research is documented in the dedicated [Lenovo M720q Six-Drive NAS project](../projects/lenovo-m720q-nas/README.md), including a [decision log](../projects/lenovo-m720q-nas/decision-log.md) and [validation checklist](../projects/lenovo-m720q-nas/validation-checklist.md).
 
-## Six-Drive NAS Engineering Review — November 4, 2026
-
-The newest research is documented in the dedicated [Lenovo M720q Six-Drive NAS project](../projects/lenovo-m720q-nas/README.md), including a [decision log](../projects/lenovo-m720q-nas/decision-log.md) and [validation checklist](../projects/lenovo-m720q-nas/validation-checklist.md).
-
-The current preferred **evaluation** path is M720q PCIe x8 riser → **LSI 9207-8e** → external SAS cabling → separately powered/cooled **six-drive** shelf. The **LSI 9300-8e** remains an alternative. A Tiny5 riser `01AJ940` and dedicated 40 mm fan are also **research candidates only**.
+The **November 4 research candidate** was M720q PCIe x8 riser → **LSI 9207-8e** → external SAS cabling → separately powered/cooled **six-drive** shelf. The **LSI 9300-8e** remains an alternative. A Tiny5 riser `01AJ940` and dedicated 40 mm fan are also **research candidates only**.
 
 **Critical blockers:** physical riser/card/bracket and lid clearance, controller firmware/TrueNAS compatibility, external SAS connectivity, power, and a directed cooling solution meeting the HBA's specified airflow requirements. These have **not** been tested on the purchased machine. The M.2/ASM1166 approach remains an earlier alternative under review, not the approved build.
 
-**Status: WAIT — further purchases on hold until physical M720q inspection and engineering approval.** The operational Ubuntu homelab and its Immich backup disks remain unchanged; migration is a separate future project.
+**November 6 status: WAIT — TrueNAS controller installation completed; further component purchases remain on hold pending fitment, power, cooling, and architecture approval.** The operational Ubuntu homelab and its Immich backup disks remain unchanged; migration is a separate future project.
+
+## Updated Preferred Storage Direction — November 6, 2026
+
+The latest **proposed** configuration starts with **one RackChoice five-bay SATA/SAS hot-swap cage** mounted on a heavy-duty rack shelf, reserving room for a second cage later. The M720q remains the NAS controller; Immich and Jellyfin compute stay separate.
+
+```text
+M720q TrueNAS controller (installed / tested locally)
+   |
+PCIe riser + SAS HBA (not acquired)
+   |
+External SAS cable (not selected)
+   |
+RackChoice 5-bay cage on heavy-duty shelf (not acquired)
+   + independent HDD power and cooling (not validated)
+   + optional second cage in future
+```
+
+This **supersedes the six-drive enclosure concept as the preferred research direction**, not as a final approved build. All remaining purchases are on hold. The preceding six-drive HBA comparison is retained for historical engineering context.
 
 ## Architecture Validation Still Required
 
@@ -135,7 +145,7 @@ TrueNAS SCALE
 ZFS
 ```
 
-This is still a planned deployment.
+**TrueNAS SCALE 25.10.x has been installed as the controller OS; a production ZFS data pool remains planned and has not been created.**
 
 ZFS is attractive for the project because the NAS is intended to become the authoritative location for persistent data.
 
@@ -308,17 +318,18 @@ This project is helping me learn:
 
 ## Status
 
-The NAS has moved beyond planning-only because the controller computer has now been purchased, but the system is still not part of the production homelab.
+The controller has moved beyond hardware acquisition: TrueNAS SCALE was installed and local web access verified November 6. The storage system remains **pre-production** without HBA, cage, HDDs, pool, shares, or migration.
 
 Current status:
 
 ```text
 Lenovo M720q purchased
-→ awaiting inspection
-→ controller architecture not finalized
-→ remaining components not purchased
-→ TrueNAS not deployed
-→ storage pool not deployed
+→ TrueNAS SCALE 25.10.x booted from SanDisk 256 GB SATA SSD
+→ Toshiba NVMe Windows partitions preserved
+→ local Ethernet management/web UI verified
+→ HBA, riser, external five-bay cage not installed
+→ ZFS data pool and shares not created
+→ production NAS not deployed
 ```
 
-After the M720q is physically inspected, this page will be updated with the verified SSD type, RAM configuration, free expansion interfaces, BIOS/hardware-health results, selected controller path, RAM target, boot-drive arrangement, storage topology, and thermal requirements.
+The November 6 hands-on results, including the original Ubuntu-server verification, are in the [progress report](../projects/lenovo-m720q-nas/progress-2026-11-06.md). The next milestone is **physical HBA/riser/power/thermal validation**, not migration.

@@ -16,7 +16,8 @@ flowchart TD
     Backup[1 TB Immich Backup\n/mnt/immich-backup]
     Docker[Docker / Docker Compose]
     Immich[Immich]
-    Nextcloud[Nextcloud]
+    Pihole[Pi-hole]
+    OpenGym[OpenGym API and Web]
     Kuma[Uptime Kuma]
     Portainer[Portainer]
     Netdata[Netdata]
@@ -37,12 +38,12 @@ flowchart TD
     Server --> Tailscale
 
     Docker --> Immich
-    Docker --> Nextcloud
+    Docker --> Pihole
+    Docker --> OpenGym
     Docker --> Kuma
     Docker --> Portainer
 
     Immich --> Photos
-    Nextcloud --> Storage
     Photos --> Backup
 
     Kuma -. monitoring network .-> Portainer
@@ -52,6 +53,8 @@ flowchart TD
     Tailscale --> Server
     Mac -. Ansible over SSH .-> Server
 ```
+
+Current diagram excludes Nextcloud because it was removed November 6, 2026. Its historical troubleshooting write-up is retained elsewhere in the portfolio. The final November 6 Docker check reported all nine containers healthy, including both OpenGym containers.
 
 ## Monitoring View
 
@@ -131,9 +134,9 @@ The planned architecture separates persistent storage, application compute, and 
 flowchart TD
     Router[Router]
     Switch[2.5 GbE Switch]
-    NAS[NAS Controller]
+    NAS[M720q TrueNAS Controller\nOS Installed; Storage Pending]
     HBA[PCIe HBA\nIT Mode]
-    Shelf[8-Bay Storage Shelf]
+    Shelf[Planned 5-Bay Hot-Swap Cage\nShelf-Mounted]
     Compute[Immich / Jellyfin\nCompute Node]
     Infra[Network Infrastructure\nPi-hole / Unbound / Tailscale]
     Screen[Dashboard / Kiosk]
@@ -198,4 +201,4 @@ The architecture is being built around several principles:
 
 The current-server sections describe deployed systems.
 
-The future rack and NAS sections describe planned architecture and will be updated as hardware is purchased, installed, and tested.
+The M720q controller has TrueNAS SCALE installed and initial Ethernet/web access verified. The future rack, HBA, five-bay cage, data pool, shares, and storage migration remain **planned**, not deployed.

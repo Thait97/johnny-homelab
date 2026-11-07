@@ -1,4 +1,6 @@
-# Nextcloud Docker Compose Troubleshooting
+# Nextcloud Docker Compose Troubleshooting — Historical Project
+
+**Project status:** Previously deployed; Nextcloud removed from the active Ubuntu homelab on November 6, 2026. This document preserves a real earlier troubleshooting experience, not a currently running service.
 
 ## Problem
 
@@ -8,7 +10,7 @@ This was a useful reminder that container failures are not always application fa
 
 ## Environment
 
-The Nextcloud stack includes:
+The former Nextcloud stack included:
 
 - Nextcloud
 - MariaDB
@@ -16,7 +18,7 @@ The Nextcloud stack includes:
 - cron
 - Docker Compose
 
-Storage is located under:
+The historical configuration used storage under:
 
 ```text
 /mnt/storage/nextcloud

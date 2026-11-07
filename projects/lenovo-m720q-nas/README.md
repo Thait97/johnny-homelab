@@ -7,7 +7,7 @@
 
 ## Objective
 
-I installed **TrueNAS SCALE 25.10.x** on a Lenovo ThinkCentre M720q Tiny to prepare it as a **storage-only NAS controller**. The current preferred *unapproved* enclosure plan is a separately powered/cooled **five-bay hot-swap cage** on a heavy-duty rack shelf (with room for a second cage later). My goal is centralized storage for Immich, Nextcloud, Jellyfin, and other workloads while keeping application compute on separate nodes.
+I installed **TrueNAS SCALE 25.10.x** on a Lenovo ThinkCentre M720q Tiny to prepare it as a **storage-only NAS controller**. The current preferred *unapproved* enclosure plan is a separately powered/cooled **five-bay hot-swap cage** on a heavy-duty rack shelf (with room for a second cage later). My goal is centralized storage for Immich, Jellyfin, and other future workloads while keeping application compute on separate nodes. Nextcloud was a previous self-hosting project and was **removed from the active Ubuntu deployment on November 6**.
 
 The **controller operating-system installation, initial boot, disk identification, and wired LAN web access have been verified**. The expansion HBA, external drive cage, HDD detection, ZFS data pools, shares, cooling, performance, and reliability **have not been tested or deployed**.
 
@@ -56,9 +56,10 @@ The full [progress report](progress-2026-11-06.md) records the following:
 - Obtained a **private LAN address over Ethernet** and accessed the TrueNAS web interface from a MacBook.
 - **No data pool or NAS shares created.** The Toshiba NVMe has **not** been erased.
 - Reconnected the original Ubuntu server and verified its photo and backup mounts with `lsblk -o NAME,SIZE,MOUNTPOINTS`, plus container status via `docker ps`.
-- Immich components, Pi-hole, Uptime Kuma, and Portainer reported healthy; `opengym-api-1` and `opengym-web-1` still reported **health: starting** at the final inspection.
+- Immich components, Pi-hole, Uptime Kuma, and Portainer reported healthy during the initial checks. Both OpenGym containers initially showed **health: starting**, but a **later final check confirmed all nine Docker containers healthy**.
+- **Nextcloud was removed** from the Ubuntu server on November 6; its previous troubleshooting case study remains in the repository.
 
-These are *setup and point-in-time validation* results, not production storage or long-term stability tests.
+These are *setup and point-in-time validation* results, not production storage or long-term stability tests. Container health status does not independently prove complete application-level functionality.
 
 ## Research: HBA Candidates
 

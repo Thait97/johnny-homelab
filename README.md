@@ -35,8 +35,8 @@ The main portfolio story is not simply that I installed self-hosted services. It
 
 ## Future / In-Progress Architecture
 
-- [Lenovo M720q Six-Drive NAS — Engineering Research & Validation](projects/lenovo-m720q-nas/README.md) — **controller purchased; riser/HBA/cooling/enclosure unapproved; NOT deployed**
-- [Future NAS Architecture](architecture/future-nas.md) — **planned, not yet deployed**
+- [Lenovo M720q NAS Controller — TrueNAS Installed; DAS Pending](projects/lenovo-m720q-nas/README.md) — [November 6 installation milestone](projects/lenovo-m720q-nas/progress-2026-11-06.md); no data pool or external storage
+- [Future NAS Architecture](architecture/future-nas.md) — TrueNAS controller configured for initial LAN access; **NAS storage expansion and production migration not deployed**
 - [Network Watchdog Design — In Progress](automation/network-watchdog.md) — **in development, not yet presented as fully deployed**
 - Future Immich/Jellyfin compute and 2.5 GbE rack design remain part of the planned architecture
 
@@ -168,7 +168,7 @@ Router
    +-- Monitoring / Management
 ```
 
-A Lenovo M720q Tiny has been **purchased** as the potential NAS controller; it is **not installed, configured, or deployed**. PCIe HBA, six-drive enclosure, cooling, cables, ZFS/TrueNAS SCALE, and any network upgrades remain subject to engineering validation and purchase approval. See the [six-drive NAS research project](projects/lenovo-m720q-nas/README.md).
+The purchased Lenovo M720q now boots **TrueNAS SCALE 25.10.x** from a verified SanDisk SATA SSD and was accessible through its web interface over Ethernet on November 6. **No data pool, SAS HBA, external drives, or NAS shares exist yet.** The current preferred *research* design uses a shelf-mounted **five-bay hot-swap cage** with optional later expansion. See the [NAS controller project](projects/lenovo-m720q-nas/README.md) and [November 6 progress report](projects/lenovo-m720q-nas/progress-2026-11-06.md). Purchases for the remaining hardware remain on hold.
 
 ## What I'm Learning
 

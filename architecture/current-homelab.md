@@ -71,7 +71,6 @@ Several self-hosted applications run using Docker and Docker Compose.
 Current services include:
 
 - Immich
-- Nextcloud
 - Uptime Kuma
 - Netdata
 - Portainer
@@ -150,24 +149,11 @@ The backup design includes:
 
 I manually tested the backup process before relying on the scheduled job.
 
-## Nextcloud
+## Previous Service — Nextcloud (Removed November 6, 2026)
 
-Nextcloud runs as a Docker Compose stack.
+I previously operated Nextcloud through a Docker Compose stack with MariaDB, Redis, and cron. I removed Nextcloud from the active Ubuntu deployment on November 6, 2026 while reorganizing the homelab around dedicated storage and compute systems.
 
-Its environment includes:
-
-- Nextcloud
-- MariaDB
-- Redis
-- cron
-
-Storage is located under:
-
-```text
-/mnt/storage/nextcloud
-```
-
-This stack has also been useful for learning configuration troubleshooting and Compose file debugging.
+The earlier [Nextcloud Compose troubleshooting case study](../troubleshooting/nextcloud-compose.md) is retained as historical learning evidence. Nextcloud is **not currently running** on this Ubuntu server.
 
 ## Monitoring
 
@@ -275,6 +261,10 @@ failed=0
 
 For a health-check playbook, `changed=0` is desirable because it means the playbook inspected the system without modifying it.
 
+## November 6, 2026 — Docker Verification
+
+After reconnecting the Ubuntu server to Ethernet, an initial check found the two OpenGym containers still starting. A subsequent final check confirmed **all nine Docker containers healthy**, including both OpenGym containers and the Immich, Pi-hole, Uptime Kuma, and Portainer components. This is a point-in-time health-status result, not a claim that every application passed an independent end-to-end test.
+
 ## Current Architecture
 
 ```text
@@ -292,7 +282,7 @@ For a health-check playbook, `changed=0` is desirable because it means the playb
         |               |               |
    +----+----+      +----+----+      +---+---+
    |         |      |         |      |       |
- Immich   Nextcloud Photos   Backup  Kuma  Netdata
+ Immich   Pi-hole   Photos   Backup  Kuma  Netdata
    |                   |       |      |
    |                   |       |   Portainer
    |                   |       |

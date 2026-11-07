@@ -1,23 +1,23 @@
-# Lenovo M720q Six-Drive NAS — Validation Checklist
+# Lenovo M720q NAS — Controller and Five-Bay Expansion Validation Checklist
 
 **Gate:** Research and physical fitment come before additional purchases.  
-**Current status:** All checks below are **unverified** unless explicitly described as documented purchase information.
+**Current status (November 6):** TrueNAS boot, storage identities and initial Ethernet/web access verified; expansion and production storage remain unverified.
 
 ## Acquired
 
 - [x] Purchased Lenovo ThinkCentre M720q Tiny (listing: i5-8400T, 8 GB DDR4, 256 GB SSD)
-- [ ] Confirm received model/specification and physically inspect condition
+- [x] Identified M720q during hands-on TrueNAS installation; full PCIe expansion/thermal fit inspection still outstanding
 
 ## Machine Inspection — Read-Only / Non-Destructive
 
-- [ ] Confirm SSD form factor and interface: M.2 NVMe or 2.5-inch SATA
+- [x] Identified SanDisk X400 256 GB **SATA SSD** as TrueNAS boot drive
 - [ ] Record occupied and available M.2 slots
 - [ ] Record installed memory arrangement (1×8 GB vs 2×4 GB, or other)
 - [ ] Inspect physical PCIe expansion connection and riser provisions
-- [ ] Check BIOS access, health, and boot behavior
-- [ ] Verify CPU/RAM/storage specifications as shipped
+- [x] Verified successful TrueNAS boot and examined UEFI boot entries using `efibootmgr -v` (full hardware-health validation pending)
+- [x] Verified two internal disks via `lsblk -f`: SanDisk SATA boot drive and Toshiba 256 GB NVMe with existing Windows partitions (RAM module layout pending)
 - [ ] Document current case interior and rear-panel photos (sanitize serial number)
-- [ ] Determine whether the SSD can remain as a dedicated TrueNAS boot device
+- [x] Confirmed SanDisk SATA drive holds the TrueNAS boot pool; long-term boot-drive reliability not yet tested
 
 ## Riser & HBA Fitment — No Purchasing Until Reviewed
 
@@ -51,30 +51,43 @@
 
 ## External Storage System — Not Yet Designed/Approved
 
-- [ ] Finalize six-drive enclosure/backplane design
+- [ ] Validate preferred RackChoice **five-bay** hot-swap cage and heavy-duty shelf mounting (second cage reserved as a future option)
 - [ ] Select SFF-8088 or SFF-8644 cable solution **after** HBA selection
 - [ ] Verify correct SAS-to-SATA routing/connectivity and connector direction
 - [ ] Confirm drive enumeration, SMART data, and stable reconnects
-- [ ] Finalize boot-drive and ZFS layout
+- [x] Boot drive identified and TrueNAS OS installed; [ ] ZFS data pool/layout remains unconfigured
 - [ ] Evaluate total additional budget ($270–610 / $280–625 excluding HDDs and M720q)
 - [ ] Compare modified Tiny vs larger chassis for cost, safety, and maintenance
 
 ## Production Protection
 
 - [x] Existing Ubuntu server and Immich main/backup storage designated **out of scope** for early NAS experiments
-- [ ] Keep current Sunday 03:00 backup and 30-day retention unchanged
+- [x] November 6 session preserved existing Ubuntu photo/backup mounts and did not change backup scheduling or retention; future migration validation still required
 - [ ] Create migration plan only after the NAS passes inspection and controlled tests
 - [ ] Demonstrate an appropriate restore procedure before moving authoritative data
 
 ## Evidence to Add Later (Do Not Invent)
 
 - [ ] Sanitized M720q exterior/interior photos
-- [ ] SSD identification, RAM inspection, BIOS observations
+- [x] Identified boot SATA SSD and preserved Windows-containing NVMe; [ ] detailed RAM/BIOS health and PCIe inspection records
 - [ ] Measured HBA bracket, lid and heatsink clearance
 - [ ] Fan model, mounting, air path and thermal validation
 - [ ] HBA firmware and Linux/TrueNAS detection results
-- [ ] Six-drive enumeration and SMART results
+- [ ] Five-drive enumeration and SMART results (external disks not yet connected)
 - [ ] Final bill of materials and actual cost
 - [ ] Deployment and migration verification
+
+## November 6 Point-in-Time Checks
+
+- [x] TrueNAS SCALE 25.10.x installed and booted from SanDisk SATA SSD
+- [x] Existing Windows partitions on Toshiba NVMe preserved
+- [x] Web interface reached from MacBook on wired LAN (address redacted)
+- [x] Existing Ubuntu server reconnected via Ethernet and reachable over SSH
+- [x] Ubuntu photo and backup disks mounted at expected paths
+- [x] Core Immich, Pi-hole, Uptime Kuma, and Portainer containers reported healthy
+- [ ] OpenGym API and web containers fully healthy at final check (both still `health: starting`)
+- [ ] External HBA, five-bay drive detection, ZFS pool, and shares (not installed)
+
+See [November 6 installation progress report](progress-2026-11-06.md).
 
 **Do not mark a checklist item complete merely because a product specification claims a feature. Physical inspection and relevant testing are required.**

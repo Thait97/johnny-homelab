@@ -70,7 +70,7 @@ Several self-hosted applications run using Docker and Docker Compose.
 
 Current services include:
 
-- Immich
+- Immich **v3.4.0** (verified November 10, 2026)
 - Uptime Kuma
 - Netdata
 - Portainer
@@ -122,6 +122,8 @@ I have worked with:
 
 Immich is also protected by a separate backup process using another physical drive.
 
+The [November 10 upgrade case study](../troubleshooting/immich-3.4.0-ghcr-ipv6-2026-11-10.md) documents resolution of an IPv6-related GHCR image-pull failure; IPv6 was restored after upgrading and four Immich containers were healthy at verification.
+
 ## Immich Backup
 
 The Immich photo library is backed up to:
@@ -147,7 +149,7 @@ The backup design includes:
 - retention handling
 - service verification
 
-I manually tested the backup process before relying on the scheduled job.
+I manually tested the backup process before relying on the scheduled job. The [November 10 verification](../automation/immich-backup-verification-2026-11-10.md) additionally confirmed a successful November 8 scheduled backup, matching sampled PostgreSQL backup hashes, and a successful manual run. A full restoration test remains outstanding.
 
 ## Previous Service — Nextcloud (Removed November 6, 2026)
 
@@ -229,6 +231,8 @@ sudo ufw status verbose
 sudo iptables -S DOCKER-USER
 sudo ss -lntup
 ```
+
+A [read-only security audit on November 10](../security/audit-2026-11-10.md) inspected UFW, IPv4/IPv6 DOCKER-USER chains, SSH access policy, and container privileges. This was a local configuration assessment, not proof of complete external security.
 
 ## Remote Access
 

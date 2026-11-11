@@ -6,6 +6,14 @@ This repository documents systems I have **built and operated**, along with clea
 
 The main portfolio story is not simply that I installed self-hosted services. It is that I built infrastructure, encountered real failures, isolated the affected layer, fixed the issue, made solutions persistent where appropriate, and verified the result.
 
+## November 10, 2026 — Verified Maintenance & Tooling
+
+- [Immich v3.4.0 upgrade — GHCR IPv6 troubleshooting](troubleshooting/immich-3.4.0-ghcr-ipv6-2026-11-10.md) — isolated IPv6 registry download resets, used and reversed a temporary IPv6 workaround; four Immich containers healthy and API version verified
+- [Immich backup verification](automation/immich-backup-verification-2026-11-10.md) — scheduled/manual jobs, destination UUID, gzip and SHA-256 checks, rsync reconciliation; **no full restore test claimed**
+- [Read-only security audit](security/audit-2026-11-10.md) — UFW, IPv4/IPv6 Docker filtering, SSH, nine containers' privilege flags; external exposure review remains pending
+- [Ubuntu package maintenance](maintenance/ubuntu-updates-2026-11-10.md) — 10 updates, Tailscale 1.104.6 and no remaining APT upgrades at the final check
+- [Mac Docker Desktop and Homelable standalone](projects/homelable-mac-2026-11-10.md) — Apple Silicon Docker Engine 29.9.3, local loopback-only frontend UI; **not deployed on Ubuntu**
+
 ## Featured Troubleshooting
 
 1. [Immich External-Library Re-Indexing — Validation Pending](troubleshooting/immich-external-library-reindexing.md) — PostgreSQL asset IDs, Docker mounts, scheduled scans, automation isolation
@@ -67,7 +75,7 @@ The main portfolio story is not simply that I installed self-hosted services. It
 
 ## Current Services
 
-- **Immich** — self-hosted photo management
+- **Immich v3.4.0** — self-hosted photo management (verified November 10)
 - **Uptime Kuma** — service availability monitoring
 - **Netdata** — system performance monitoring
 - **Portainer** — Docker management
@@ -75,6 +83,10 @@ The main portfolio story is not simply that I installed self-hosted services. It
 - **Pi-hole** — DNS-level filtering
 - **Samba** — SMB file sharing
 - **Tailscale** — remote network access
+
+## Separate Mac-Only Tooling
+
+- **Homelable standalone frontend** — launched November 10 in Docker Desktop on the Mac at `127.0.0.1:3000` for visualization experiments. Default demo diagram loaded. No Ubuntu deployment, backend, scanner, rack canvas completion, or monitoring replacement is claimed.
 
 ## Previously Deployed Services
 
@@ -129,7 +141,7 @@ df -h
 
 because a mount-point directory existing does not prove the intended disk is actually mounted.
 
-The Immich workflow currently runs Sunday at 03:00 with 30-day deleted-file retention. Longer retention, optional daily copy-only synchronization, and periodic restore testing are documented as **future improvements**, not current deployment.
+The Immich workflow currently runs Sunday at 03:00 with 30-day deleted-file retention. The [November 10 pre-upgrade verification](automation/immich-backup-verification-2026-11-10.md) documented the successful November 8 scheduled job, matching database-backup SHA-256 hashes, backup-integrity and rsync checks, and a successful manual systemd run. A full disaster-recovery restore was **not** tested. Longer retention, optional daily copy-only synchronization, and periodic restore testing are documented as **future improvements**, not current deployment.
 
 ## Troubleshooting Approach
 

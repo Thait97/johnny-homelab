@@ -93,6 +93,12 @@ Current deleted-file retention:
 
 The service defines what runs. The timer defines when it runs.
 
+## November 10, 2026 — Additional Verified Checks
+
+Before upgrading Immich to v3.4.0, I verified the November 8 scheduled backup; checked the destination disk UUID, backup-script safety checks, and gzip integrity of a PostgreSQL backup; and confirmed matching SHA-256 hashes on the primary and backup drives. A manually started weekly backup service returned `0/SUCCESS`. Rsync comparisons led to copying 266 missing files and three additional original PNG uploads. The final comparison found no remaining ordinary original-upload files pending transfer; only an `.immich` marker timestamp difference remained.
+
+The full [dated verification report](immich-backup-verification-2026-11-10.md) records the evidence and its limitations. **No full disaster-recovery restore test has been completed.** The weekly schedule and 30-day retention remain unchanged.
+
 ## Testing and Verification
 
 I manually tested the workflow before relying on the schedule, and the first scheduled run also completed successfully.

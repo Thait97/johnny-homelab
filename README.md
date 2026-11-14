@@ -6,6 +6,14 @@ This repository documents systems I have **built and operated**, along with clea
 
 The main portfolio story is not simply that I installed self-hosted services. It is that I built infrastructure, encountered real failures, isolated the affected layer, fixed the issue, made solutions persistent where appropriate, and verified the result.
 
+## November 11–13, 2026 — Automation, Security and Recovery Milestones
+
+- [Ubuntu unattended security upgrades](security/ubuntu-unattended-upgrades-2026-11-13.md) — daily approved Ubuntu security packages, automatic reboot disabled; November 13 unattended package installation verified
+- [Immich patch-only image preparation](automation/immich-patch-preparation.md) — official stable patch-only selection, backup prerequisites, safe failure-path tests and scheduled Wednesday preparation; **no automatic deployment, first scheduled pull not yet observed**
+- [Immich daily database backup replication](automation/immich-database-replication.md) — separate-drive, integrity-checked, temporary-file copies at 03:30 daily; manually tested, next scheduled run pending observation
+- [Controlled Ubuntu package upgrades and reboot recovery](maintenance/ubuntu-maintenance-2026-11-13.md) — Buildx, Compose, containerd, Tailscale, GTK; verified SSH socket activation, container recovery and five active timers
+- **Latest container verification:** nine running after reboot; **eight healthy**, while Portainer was **running without a health check**. Immich **v3.4.1**. Full restore and future scheduled runs remain unverified.
+
 ## November 10, 2026 — Verified Maintenance & Tooling
 
 - [Immich v3.4.0 upgrade — GHCR IPv6 troubleshooting](troubleshooting/immich-3.4.0-ghcr-ipv6-2026-11-10.md) — isolated IPv6 registry download resets, used and reversed a temporary IPv6 workaround; four Immich containers healthy and API version verified
@@ -75,7 +83,7 @@ The main portfolio story is not simply that I installed self-hosted services. It
 
 ## Current Services
 
-- **Immich v3.4.0** — self-hosted photo management (verified November 10)
+- **Immich v3.4.1** — self-hosted photo management (latest recorded November 13; v3.4.0 upgrade documented November 10)
 - **Uptime Kuma** — service availability monitoring
 - **Netdata** — system performance monitoring
 - **Portainer** — Docker management
@@ -94,6 +102,9 @@ The main portfolio story is not simply that I installed self-hosted services. It
 
 ## Current Automation
 
+- Daily Ubuntu unattended security updates (Ubuntu-approved origins, no automatic reboot)
+- Daily Immich database-backup replication at 03:30 (first scheduled run awaiting observation)
+- Wednesday 04:00 Immich **patch-image preparation only**; application deployment remains manual (first scheduled run awaiting observation)
 - Read-only Ansible health checks
 - Weekly rsync-based Immich backup/synchronization with `systemd` scheduling and retention
 - Immich burst-photo review workflow
@@ -110,6 +121,10 @@ The custom **Network Watchdog** is documented separately as **In Progress** rath
 After restoring Ethernet connectivity to the Ubuntu server, a later verification confirmed **all 9 Docker containers healthy**, including Immich components, Pi-hole, Uptime Kuma, Portainer, and both OpenGym containers. This replaces the earlier intermediate observation that the OpenGym containers were still in `health: starting`.
 
 See the [November 6 NAS and Ubuntu verification report](projects/lenovo-m720q-nas/progress-2026-11-06.md).
+
+## November 13, 2026 — Post-Reboot Container & Timer Verification
+
+A controlled Ubuntu reboot following a libc security update recovered all nine containers. Eight reported `healthy`; **Portainer was running without a configured health check**, which is not equivalent to `healthy`. The five enabled/active timers were: APT daily refresh, unattended security upgrades, weekly Immich full backup, daily Immich DB replication, and Wednesday patch-image preparation. See the [maintenance and recovery report](maintenance/ubuntu-maintenance-2026-11-13.md).
 
 ## Monitoring Philosophy
 
@@ -141,7 +156,7 @@ df -h
 
 because a mount-point directory existing does not prove the intended disk is actually mounted.
 
-The Immich workflow currently runs Sunday at 03:00 with 30-day deleted-file retention. The [November 10 pre-upgrade verification](automation/immich-backup-verification-2026-11-10.md) documented the successful November 8 scheduled job, matching database-backup SHA-256 hashes, backup-integrity and rsync checks, and a successful manual systemd run. A full disaster-recovery restore was **not** tested. Longer retention, optional daily copy-only synchronization, and periodic restore testing are documented as **future improvements**, not current deployment.
+The existing full-library Immich backup continues Sunday at 03:00 with 30-day deleted-file retention. A separate [daily database replication job](automation/immich-database-replication.md) is enabled for 03:30, with a successful manual test on November 13. The [November 10 pre-upgrade verification](automation/immich-backup-verification-2026-11-10.md) documented the successful November 8 scheduled job, matching database-backup SHA-256 hashes, backup-integrity and rsync checks, and a successful manual systemd run. A full disaster-recovery restore was **not** tested. Initial validation of the revised backup error-recovery behavior is incomplete. Longer retention, optional daily copy-only synchronization, and periodic restore testing are documented as **future improvements**, not current deployment.
 
 ## Troubleshooting Approach
 

@@ -95,6 +95,10 @@ The workflow reports when action may be needed, but package installation and reb
 
 A script becomes much more useful when it has a repeatable schedule, logs, and service state that can be inspected with normal Linux tools.
 
+## Separate November 13 Security Update Automation
+
+This existing script is still a **read-only update-awareness workflow**. A separate `unattended-upgrades` configuration now automatically installs eligible Ubuntu security updates from approved origins without automatically rebooting. Third-party infrastructure updates remain manually controlled. The November 13 logs verified a completed unattended `libc6`-related package batch. See [Ubuntu unattended security maintenance](../security/ubuntu-unattended-upgrades-2026-11-13.md).
+
 ## Result
 
 The server has a repeatable update-awareness workflow that checks for maintenance needs and routes that status through monitoring and notifications without automatically modifying the host.

@@ -70,7 +70,7 @@ Several self-hosted applications run using Docker and Docker Compose.
 
 Current services include:
 
-- Immich **v3.4.0** (verified November 10, 2026)
+- Immich **v3.4.1** (latest recorded November 13, 2026)
 - Uptime Kuma
 - Netdata
 - Portainer
@@ -150,6 +150,12 @@ The backup design includes:
 - service verification
 
 I manually tested the backup process before relying on the scheduled job. The [November 10 verification](../automation/immich-backup-verification-2026-11-10.md) additionally confirmed a successful November 8 scheduled backup, matching sampled PostgreSQL backup hashes, and a successful manual run. A full restoration test remains outstanding.
+
+## November 11–13 Backup and Patch Safeguards
+
+The Sunday full-library backup is supplemented by a new daily database replication timer at 03:30. The replication uses UUID/mount validation, a shared maintenance lock, gzip/source-copy checks and verified temporary-file renaming. Manual service execution succeeded; the first scheduled run after November 13 has not yet been observed. See [DB replication](../automation/immich-database-replication.md).
+
+The Wednesday 04:00 Immich patch updater is a **preparation-only** service: it checks eligible stable patch releases and backup prerequisites, then prepares images for later manual deployment. Dry-run/service tests passed but the first real scheduled image-preparation run remains to be observed. See [patch preparation](../automation/immich-patch-preparation.md). **Immich was still v3.4.1 after the reboot**.
 
 ## Previous Service — Nextcloud (Removed November 6, 2026)
 
@@ -264,6 +270,10 @@ failed=0
 ```
 
 For a health-check playbook, `changed=0` is desirable because it means the playbook inspected the system without modifying it.
+
+## November 13, 2026 — Controlled Reboot Verification
+
+Following staged Docker/containerd and Tailscale upgrades and a `libc6` reboot-required marker, a controlled reboot succeeded. SSH remained accessible via enabled `ssh.socket`, even though `ssh.service` was disabled. Docker, containerd, and Tailscale recovered. All nine containers ran; **eight reported healthy while Portainer was running without a health check**. All five maintenance timers remained active. [Maintenance report](../maintenance/ubuntu-maintenance-2026-11-13.md).
 
 ## November 6, 2026 — Docker Verification
 

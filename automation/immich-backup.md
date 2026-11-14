@@ -99,6 +99,12 @@ Before upgrading Immich to v3.4.0, I verified the November 8 scheduled backup; c
 
 The full [dated verification report](immich-backup-verification-2026-11-10.md) records the evidence and its limitations. **No full disaster-recovery restore test has been completed.** The weekly schedule and 30-day retention remain unchanged.
 
+## November 11–13, 2026 — Backup Coordination and Recovery Hardening
+
+The existing Sunday 03:00 full backup was retained, including an initial online rsync pass, final offline consistency pass, Docker Compose stop/start handling, UUID/mount checks, a shared lock, deleted-file retention and post-backup container checks. The original script was backed up, then two error-recovery changes were made: error masking was removed from `docker compose start`, and the point at which the `Immich stopped` state is set was revised for shutdown-failure handling. Bash syntax validation succeeded; full failure-injection testing and an end-to-end restoration exercise remain **outstanding**.
+
+The shared lock `/run/immich-weekly-backup.lock` now coordinates this job with [daily database replication](immich-database-replication.md) and the [Immich patch preparation workflow](immich-patch-preparation.md). The backup schedule and 30-day retention are unchanged.
+
 ## Testing and Verification
 
 I manually tested the workflow before relying on the schedule, and the first scheduled run also completed successfully.
